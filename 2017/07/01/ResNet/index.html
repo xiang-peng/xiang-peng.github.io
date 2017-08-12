@@ -117,7 +117,7 @@
 <ul>
 <li><strong>ResNet</strong> —MSRA何凯明团队的Residual Networks，在2015年ImageNet上大放异彩，在ImageNet的classification、detection、localization以及COCO的detection和segmentation上均斩获了第一名的成绩，而且Deep Residual Learning for Image Recognition也获得了CVPR2016的best paper，实在是实至名归。就让我们来观摩大神的这篇上乘之作。</li>
 </ul>
-<hr>
+<a id="more"></a>
 <p>[TOC]</p>
 <h2 id="ResNet要解决的问题"><a href="#ResNet要解决的问题" class="headerlink" title="ResNet要解决的问题"></a>ResNet要解决的问题</h2><p>首先一个问题是 vanishing/exploding gradients，即梯度的消失或发散。这就导致训练难以收敛。但是随着 normalized initialization and intermediate normalization layers的提出，解决了这个问题。</p>
 <p>当收敛问题解决后，又一个问题暴露出来：随着网络深度的增加，系统精度得到饱和之后，迅速的下滑。让人意外的是这个性能下降不是过拟合导致的。对一个合适深度的模型加入额外的层数导致训练误差变大。如下图所示：<br><img src="/2017/07/01/ResNet/1.png" alt="1.png" title=""><br>现在浅层的网络（shallower network）无法明显提升网络的识别效果了，所以现在要解决的问题就是怎样在加深网络的情况下又解决训练误差变大的问题。如果我们加入额外的 层只是一个 identity mapping，那么随着深度的增加，训练误差并没有随之增加。所以我们认为可能存在另一种构建方法，随着深度的增加，训练误差不会增加，只是我们没有找到该方法而已。</p>
