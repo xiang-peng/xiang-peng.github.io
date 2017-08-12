@@ -127,7 +127,7 @@
 <p>这种改写启发于 图1中性能退化问题违反直觉的现象。正如前言所说，如果增加的层数可以构建为一个 identity mappings，那么增加层数后的网络训练误差应该不会增加，与没增加之前相比较。性能退化问题暗示多个非线性网络层用于近似identity mappings 可能有困难。使用残差学习改写问题之后，如果identity mappings 是最优的，那么优化问题变得很简单，直接将多层非线性网络参数趋0。</p>
 <p>实际中，identity mappings 不太可能是最优的，但是上述改写问题可能对问题提供有效的预先处理 (provide reasonable preconditioning)。如果最优函数接近identity mappings，那么优化将会变得容易些。 实验证明该思路是对的。</p>
 <p>这个Residual block通过shortcut connection实现，通过shortcut将这个block的输入和输出进行一个element-wise的加叠，这个简单的加法并不会给网络增加额外的参数和计算量，同时却可以大大增加模型的训练速度、提高训练效果，并且当模型的层数加深时，这个简单的结构能够很好的解决退化问题。</p>
-<p>###Network Architectures<br></p>
+<p>###Network Architectures<br><img src="/2017/07/01/ResNet/3.jpg" alt="3.jpg" title=""></p>
 <p>首先构建了一个18层和一个34层的plain网络，即将所有层进行简单的铺叠，然后构建了一个18层和一个34层的residual网络，仅仅是在plain上插入了shortcut，而且这两个网络的参数量、计算量相同，并且和之前有很好效果的VGG-19相比，计算量要小很多。（36亿FLOPs VS 196亿FLOPs，FLOPs即每秒浮点运算次数。）这也是作者反复强调的地方，也是这个模型最大的优势所在。</p>
 <p>Plain Network 主要是受 VGG 网络启发，主要采用3*3滤波器，遵循两个设计原则：1）对于相同输出特征图尺寸，卷积层有相同个数的滤波器，2）如果特征图尺寸缩小一半，滤波器个数加倍以保持每个层的计算复杂度。通过步长为2的卷积来进行降采样。一共34个权重层。需要指出,这个网络与VGG相比，滤波器要少，复杂度要小。</p>
 <p>##对ResNet的解读</p>
