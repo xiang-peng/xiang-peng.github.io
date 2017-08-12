@@ -161,7 +161,194 @@
 <img src="/2017/07/01/ResNet/8.png" alt="8.png" title="">
 <h2 id="计算时间和层数"><a href="#计算时间和层数" class="headerlink" title="计算时间和层数"></a>计算时间和层数</h2><img src="/2017/07/01/ResNet/6.png" alt="6.png" title="">
 <img src="/2017/07/01/ResNet/7.png" alt="7.png" title="">
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight python"><table><tr><td class="code"><pre><div class="line"><span class="comment">#coding:utf-8</span></div><div class="line"><span class="comment">#导入对应的库</span></div><div class="line"><span class="keyword">import</span> collections</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> math</div><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line">slim = tf.contrib.slim</div><div class="line"></div><div class="line"><span class="comment">#定义了一个block类</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Block</span><span class="params">(collections.namedtuple<span class="params">(<span class="string">'Bolck'</span>, [<span class="string">'scope'</span>, <span class="string">'init_fn'</span>, <span class="string">'args'</span>])</span>)</span>:</span></div><div class="line">    <span class="string">'A named tuple describing a ResNet block.'</span></div><div class="line"></div><div class="line"><span class="comment">#定义了一个下采样函数</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">subsample</span><span class="params">(inputs, factor, scope = None)</span>:</span></div><div class="line">    <span class="keyword">if</span> factor == <span class="number">1</span>:</div><div class="line">        <span class="keyword">return</span> inputs</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> slim.max_pool2d(inputs, [<span class="number">1</span>, <span class="number">1</span>], stride = factor, scope = scope)</div><div class="line"></div><div class="line"><span class="comment">#定义conv2d_same函数创建卷积层</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d_same</span><span class="params">(inputs, num_outputs, kernel_size, stride, scope = None)</span>:</span></div><div class="line">    <span class="keyword">if</span> stride == <span class="number">1</span>:</div><div class="line">        <span class="keyword">return</span> slim.conv2d(inputs, num_outputs, kernel_size, stride = <span class="number">1</span>, padding = <span class="string">'SAME'</span>, scope = scope)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        pad_total = kernel_size - <span class="number">1</span></div><div class="line">        pad_beg = pad_total // <span class="number">2</span></div><div class="line">        pad_end = pad_total - pad_beg</div><div class="line">        inputs = tf.pad(inputs, [[<span class="number">0</span>, <span class="number">0</span>], [pad_beg, pad_end], [pad_beg, pad_end], [<span class="number">0</span>, <span class="number">0</span>]])</div><div class="line">        <span class="keyword">return</span> slim.conv2d(inputs, num_outputs, kernel_size, stride = stride, padding = <span class="string">'VALID'</span>, scope = scope)</div><div class="line"></div><div class="line"><span class="comment">#定义堆叠blocks的函数</span></div><div class="line"><span class="comment">#@这个符号用于装饰器中，用于修饰一个函数，把被修饰的函数作为参数传递给装饰器</span></div><div class="line"><span class="meta">@slim.add_arg_scope</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">stack_blocks_dense</span><span class="params">(net, blocks, outputs_collections = None)</span>:</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> block <span class="keyword">in</span> blocks:</div><div class="line">        <span class="keyword">with</span> tf.variable_scope(block.scope, <span class="string">'block'</span>, [net]) <span class="keyword">as</span> sc:</div><div class="line">            <span class="keyword">for</span> i, unit <span class="keyword">in</span> enumerate(block.args):</div><div class="line">                <span class="keyword">with</span> tf.variable_scope(<span class="string">'unit_%d'</span> %(i + <span class="number">1</span>), values = [net]):</div><div class="line">                    unit_depth, unit_depth_bottleneck, unit_stride = unit </div><div class="line">                    net = block.unit_fn(net, depth = unit_depth,</div><div class="line">                                    unit_depth_bottleneck = unit_depth_bottleneck,</div><div class="line">                                    stride = unit_stride)</div><div class="line">                    net = slim.utils.collect_named_outputs(outputs_collections, sc.name, net)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> net</div><div class="line"></div><div class="line"><span class="comment">#创建ResNet通用的arg_scope</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet_arg_scope</span><span class="params">(is_training = True,</span></span></div><div class="line"><span class="function"><span class="params">                    weight_decay = <span class="number">0.0001</span>,</span></span></div><div class="line"><span class="function"><span class="params">                    batch_norm_decay = <span class="number">0.997</span>,</span></span></div><div class="line"><span class="function"><span class="params">                    batch_norm_epsilon = <span class="number">1e-5</span>,</span></span></div><div class="line"><span class="function"><span class="params">                    batch_norm_scale = True)</span>:</span></div><div class="line"></div><div class="line">    batch_norm_params = &#123;</div><div class="line">        <span class="string">'is_training'</span>: is_training,</div><div class="line">        <span class="string">'decay'</span>: batch_norm_decay,</div><div class="line">        <span class="string">'epsilon'</span>: batch_norm_epsilon,</div><div class="line">        <span class="string">'scale'</span>: batch_norm_scale,</div><div class="line">        <span class="string">'updates_collections'</span>: tf.GraphKeys.UPDATE_OPS,</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">with</span> slim.arg_scope(</div><div class="line">            [slim.conv2d],</div><div class="line">            weights_regularizer = slim.l2_regularizer(weight_decay),</div><div class="line">            weights_initializer = slim.variance_scaling_initializer(),</div><div class="line">            activation_fn = tf.nn.relu,</div><div class="line">            normalizer_fn = slim.batch_norm,</div><div class="line">            normalizer_params = batch_norm_params):</div><div class="line">        <span class="keyword">with</span> slim.arg_scope([slim.batch_norm], **batch_norm_params):</div><div class="line">            <span class="keyword">with</span> slim.arg_scope([slim.max_pool2d], padding = <span class="string">'SAME'</span>) <span class="keyword">as</span> arg_sc:</div><div class="line">                <span class="keyword">return</span> arg_sc</div><div class="line"></div><div class="line"><span class="comment">#定义bottleneck残差学习单元</span></div><div class="line"><span class="meta">@slim.add_arg_scope</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bottleneck</span><span class="params">(inputs, depth, depth_bottleneck, stride, outputs_collections = None, scope = None)</span>:</span></div><div class="line">    <span class="keyword">with</span> tf.variable_scope(scope, <span class="string">'bottleneck_v2'</span>, [inputs]) <span class="keyword">as</span> sc:</div><div class="line">        depth_in = slim.utils.last_dimension(inputs.get_shape(), min_rank = <span class="number">4</span>)</div><div class="line">        preact = slim.batch_norm(inputs, activation_fn = tf.nn.relu, scope = <span class="string">'preact'</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> depth == depth_in:</div><div class="line">            shortcut = subsample(inputs, stride, <span class="string">'shortcut'</span>)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            shortcut = slim.conv2d(preact, depth, [<span class="number">1</span>, <span class="number">1</span>], stride = stride, normalizer_fn = <span class="keyword">None</span>, activation_fn = <span class="keyword">None</span>, scope = <span class="string">'shortcut'</span>)    </div><div class="line">            residual = slim.conv2d(preact, depth_bottleneck, [<span class="number">1</span>, <span class="number">1</span>], stride = <span class="number">1</span>, scope = <span class="string">'conv1'</span>)</div><div class="line">            residual = conv2d_same(residual, depth_bottleneck, <span class="number">3</span>, stride, scope = <span class="string">'conv2'</span>)</div><div class="line">            residual = slim.conv2d(residual, depth, [<span class="number">1</span>, <span class="number">1</span>], stride = <span class="number">1</span>, normalizer_fn = <span class="keyword">None</span>, activation_fn = <span class="keyword">None</span>, scope = <span class="string">'conv3'</span>)    </div><div class="line"></div><div class="line">        output = shortcut + residual</div><div class="line"></div><div class="line">        <span class="keyword">return</span> slim.utils.collect_named_outputs(outputs_collections, sc.name, output)</div><div class="line"></div><div class="line"><span class="comment">#定义生成ResNet V2主函数</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet_v2</span><span class="params">(inputs, blocks, num_classes = None, global_pool = True, include_root_block = True, reuse = None, scope = None)</span>:</span>    </div><div class="line">    <span class="keyword">with</span> tf.variable_scope(scope, <span class="string">'resnet_v2'</span>, [inputs], reuse = reuse) <span class="keyword">as</span> sc:</div><div class="line">        end_points_collection = sc.original_name_scope + <span class="string">'_end_points'</span></div><div class="line">        <span class="keyword">with</span> slim.arg_scope([slim.conv2d, bottleneck, stack_blocks_dense], outputs_collections = end_points_collection):    </div><div class="line">            net = inputs</div><div class="line"></div><div class="line">        <span class="keyword">if</span> include_root_block:</div><div class="line">            <span class="keyword">with</span> slim.arg_scope([slim.conv2d], activation_fn = <span class="keyword">None</span>, normalizer_fn = <span class="keyword">None</span>):</div><div class="line">                net = conv2d_same(net, <span class="number">64</span>, <span class="number">7</span>, stride = <span class="number">2</span>, scope = <span class="string">'conv1'</span>)</div><div class="line">            net = slim.max_pool2d(net, [<span class="number">3</span>, <span class="number">3</span>], stride = <span class="number">2</span>, scope = <span class="string">'pool1'</span>)</div><div class="line">            net = slim.batch_norm(net, activation_fn = tf.nn.relu, scope = <span class="string">'postnorm'</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> global_pool:</div><div class="line">            net = tf.reduce_mean(net, [<span class="number">1</span>, <span class="number">2</span>], name = <span class="string">'pool5'</span>, keep_dims = <span class="keyword">True</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> num_classes <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            net = slim.conv2d(net, num_classes, [<span class="number">1</span>, <span class="number">1</span>], activation_fn = <span class="keyword">None</span>, normalizer_fn = <span class="keyword">None</span>, scope = <span class="string">'logits'</span>)    </div><div class="line">            end_points = slim.utils.convert_collection_to_dict(end_points_collection)</div><div class="line"></div><div class="line">            <span class="keyword">if</span> num_classes <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">                end_points[<span class="string">'predictions'</span>] = slim.softmax(net, scope = <span class="string">'predictions'</span>)</div><div class="line"></div><div class="line">            <span class="keyword">return</span> net, end_points</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#定义50层的ResNet   </span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet_v2_50</span><span class="params">(inputs, num_classes = None, global_pool = True, reuse = None, scope = <span class="string">'resnet_v2_50'</span>)</span>:</span>    </div><div class="line">    blocks = [</div><div class="line">        Block(<span class="string">'block1'</span>, bottleneck, [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">1</span>)] * <span class="number">2</span> + [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block2'</span>, bottleneck, [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">1</span>)] * <span class="number">3</span> + [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block3'</span>, bottleneck, [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">1</span>)] * <span class="number">5</span> + [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block4'</span>, bottleneck, [(<span class="number">2048</span>, <span class="number">1024</span>, <span class="number">1</span>)] * <span class="number">3</span>)]</div><div class="line">    <span class="keyword">return</span> resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = <span class="keyword">True</span>, reuse = reuse, scope = scope)     </div><div class="line"></div><div class="line"><span class="comment">#定义101层的ResNet  </span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet_v2_101</span><span class="params">(inputs, num_classes = None, global_pool = True, reuse = None, scope = <span class="string">'resnet_v2_101'</span>)</span>:</span>     </div><div class="line">    blocks = [</div><div class="line">        Block(<span class="string">'block1'</span>, bottleneck, [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">1</span>)] * <span class="number">2</span> + [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block2'</span>, bottleneck, [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">1</span>)] * <span class="number">3</span> + [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block3'</span>, bottleneck, [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">1</span>)] * <span class="number">22</span> + [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block4'</span>, bottleneck, [(<span class="number">2048</span>, <span class="number">512</span>, <span class="number">1</span>)] * <span class="number">3</span>)]</div><div class="line">    <span class="keyword">return</span> resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = <span class="keyword">True</span>, reuse = reuse, scope = scope)       </div><div class="line"></div><div class="line"><span class="comment">#定义152层的ResNet  </span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet_v2_152</span><span class="params">(inputs, num_classes = None, global_pool = True, reuse = None, scope = <span class="string">'resnet_v2_152'</span>)</span>:</span>      </div><div class="line">    blocks = [</div><div class="line">        Block(<span class="string">'block1'</span>, bottleneck, [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">1</span>)] * <span class="number">2</span> + [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block2'</span>, bottleneck, [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">1</span>)] * <span class="number">7</span> + [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block3'</span>, bottleneck, [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">1</span>)] * <span class="number">35</span> + [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block4'</span>, bottleneck, [(<span class="number">2048</span>, <span class="number">512</span>, <span class="number">1</span>)] * <span class="number">3</span>)]</div><div class="line">    <span class="keyword">return</span> resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = <span class="keyword">True</span>, reuse = reuse, scope = scope)        </div><div class="line"></div><div class="line"><span class="comment">#定义200层的ResNet</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">resnet_v2_200</span><span class="params">(inputs, num_classes = None, global_pool = True, reuse = None, scope = <span class="string">'resnet_v2_200'</span>)</span>:</span>      </div><div class="line">    blocks = [</div><div class="line">        Block(<span class="string">'block1'</span>, bottleneck, [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">1</span>)] * <span class="number">2</span> + [(<span class="number">256</span>, <span class="number">64</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block2'</span>, bottleneck, [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">1</span>)] * <span class="number">23</span> + [(<span class="number">512</span>, <span class="number">128</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block3'</span>, bottleneck, [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">1</span>)] * <span class="number">35</span> + [(<span class="number">1024</span>, <span class="number">256</span>, <span class="number">2</span>)]),</div><div class="line">        Block(<span class="string">'block4'</span>, bottleneck, [(<span class="number">2048</span>, <span class="number">512</span>, <span class="number">1</span>)] * <span class="number">3</span>)]</div><div class="line">    <span class="keyword">return</span> resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = <span class="keyword">True</span>, reuse = reuse, scope = scope)              </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">time_tensorflow_run</span><span class="params">(session, target, info_string)</span>:</span></div><div class="line">    num_steps_burn_in = <span class="number">10</span></div><div class="line">    total_duration = <span class="number">0.0</span></div><div class="line">    total_duration_squared = <span class="number">0.0</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_batches + num_steps_burn_in):</div><div class="line">        start_time = time.time()</div><div class="line">        _ = session.run(target)</div><div class="line">        duration = time.time() - start_time</div><div class="line">        <span class="keyword">if</span> i &gt;= num_steps_burn_in:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> i % <span class="number">10</span>:</div><div class="line">                print(<span class="string">'%s: step %d, duration = %.3f'</span> %(datetime.now(), i - num_steps_burn_in, duration))            </div><div class="line">            total_duration += duration</div><div class="line">            total_duration_squared += duration * duration</div><div class="line"></div><div class="line">    mn = total_duration / num_batches</div><div class="line">    vr = total_duration_squared / num_batches - mn * mn</div><div class="line">    sd = math.sqrt(vr)</div><div class="line">    print(<span class="string">'%s: %s across %d steps, %.3f +/- %.3f sec / batch'</span> %(datetime.now(), info_string, num_batches, mn, sd))             </div><div class="line"></div><div class="line">batch_size = <span class="number">32</span></div><div class="line">height, width = <span class="number">224</span>, <span class="number">224</span></div><div class="line">inputs = tf.random_uniform((batch_size, height, width, <span class="number">3</span>))</div><div class="line"><span class="keyword">with</span> slim.arg_scope(resnet_arg_scope(is_training = <span class="keyword">False</span>)):</div><div class="line">    net, end_points = resnet_v2_152(inputs, <span class="number">1000</span>)</div><div class="line"></div><div class="line">init = tf.global_variables_initializer()</div><div class="line">sess = tf.Session()</div><div class="line">sess.run(init)</div><div class="line">num_batches = <span class="number">100</span></div><div class="line">time_tensorflow_run(sess, net, <span class="string">"Forward"</span>)</div></pre></td></tr></table></figure>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><pre><code class="python">#coding:utf-8
+#导入对应的库
+import collections
+import tensorflow as tf
+import time
+import math
+from datetime import datetime
+slim = tf.contrib.slim
+
+#定义了一个block类
+class Block(collections.namedtuple(&#39;Bolck&#39;, [&#39;scope&#39;, &#39;init_fn&#39;, &#39;args&#39;])):
+    &#39;A named tuple describing a ResNet block.&#39;
+
+#定义了一个下采样函数
+def subsample(inputs, factor, scope = None):
+    if factor == 1:
+        return inputs
+    else:
+        return slim.max_pool2d(inputs, [1, 1], stride = factor, scope = scope)
+
+#定义conv2d_same函数创建卷积层
+def conv2d_same(inputs, num_outputs, kernel_size, stride, scope = None):
+    if stride == 1:
+        return slim.conv2d(inputs, num_outputs, kernel_size, stride = 1, padding = &#39;SAME&#39;, scope = scope)
+    else:
+        pad_total = kernel_size - 1
+        pad_beg = pad_total // 2
+        pad_end = pad_total - pad_beg
+        inputs = tf.pad(inputs, [[0, 0], [pad_beg, pad_end], [pad_beg, pad_end], [0, 0]])
+        return slim.conv2d(inputs, num_outputs, kernel_size, stride = stride, padding = &#39;VALID&#39;, scope = scope)
+
+#定义堆叠blocks的函数
+#@这个符号用于装饰器中，用于修饰一个函数，把被修饰的函数作为参数传递给装饰器
+@slim.add_arg_scope
+def stack_blocks_dense(net, blocks, outputs_collections = None):
+
+    for block in blocks:
+        with tf.variable_scope(block.scope, &#39;block&#39;, [net]) as sc:
+            for i, unit in enumerate(block.args):
+                with tf.variable_scope(&#39;unit_%d&#39; %(i + 1), values = [net]):
+                    unit_depth, unit_depth_bottleneck, unit_stride = unit 
+                    net = block.unit_fn(net, depth = unit_depth,
+                                    unit_depth_bottleneck = unit_depth_bottleneck,
+                                    stride = unit_stride)
+                    net = slim.utils.collect_named_outputs(outputs_collections, sc.name, net)
+
+    return net
+
+#创建ResNet通用的arg_scope
+def resnet_arg_scope(is_training = True,
+                    weight_decay = 0.0001,
+                    batch_norm_decay = 0.997,
+                    batch_norm_epsilon = 1e-5,
+                    batch_norm_scale = True):
+
+    batch_norm_params = {
+        &#39;is_training&#39;: is_training,
+        &#39;decay&#39;: batch_norm_decay,
+        &#39;epsilon&#39;: batch_norm_epsilon,
+        &#39;scale&#39;: batch_norm_scale,
+        &#39;updates_collections&#39;: tf.GraphKeys.UPDATE_OPS,
+    }
+
+    with slim.arg_scope(
+            [slim.conv2d],
+            weights_regularizer = slim.l2_regularizer(weight_decay),
+            weights_initializer = slim.variance_scaling_initializer(),
+            activation_fn = tf.nn.relu,
+            normalizer_fn = slim.batch_norm,
+            normalizer_params = batch_norm_params):
+        with slim.arg_scope([slim.batch_norm], **batch_norm_params):
+            with slim.arg_scope([slim.max_pool2d], padding = &#39;SAME&#39;) as arg_sc:
+                return arg_sc
+
+#定义bottleneck残差学习单元
+@slim.add_arg_scope
+def bottleneck(inputs, depth, depth_bottleneck, stride, outputs_collections = None, scope = None):
+    with tf.variable_scope(scope, &#39;bottleneck_v2&#39;, [inputs]) as sc:
+        depth_in = slim.utils.last_dimension(inputs.get_shape(), min_rank = 4)
+        preact = slim.batch_norm(inputs, activation_fn = tf.nn.relu, scope = &#39;preact&#39;)
+
+        if depth == depth_in:
+            shortcut = subsample(inputs, stride, &#39;shortcut&#39;)
+        else:
+            shortcut = slim.conv2d(preact, depth, [1, 1], stride = stride, normalizer_fn = None, activation_fn = None, scope = &#39;shortcut&#39;)    
+            residual = slim.conv2d(preact, depth_bottleneck, [1, 1], stride = 1, scope = &#39;conv1&#39;)
+            residual = conv2d_same(residual, depth_bottleneck, 3, stride, scope = &#39;conv2&#39;)
+            residual = slim.conv2d(residual, depth, [1, 1], stride = 1, normalizer_fn = None, activation_fn = None, scope = &#39;conv3&#39;)    
+
+        output = shortcut + residual
+
+        return slim.utils.collect_named_outputs(outputs_collections, sc.name, output)
+
+#定义生成ResNet V2主函数
+
+def resnet_v2(inputs, blocks, num_classes = None, global_pool = True, include_root_block = True, reuse = None, scope = None):    
+    with tf.variable_scope(scope, &#39;resnet_v2&#39;, [inputs], reuse = reuse) as sc:
+        end_points_collection = sc.original_name_scope + &#39;_end_points&#39;
+        with slim.arg_scope([slim.conv2d, bottleneck, stack_blocks_dense], outputs_collections = end_points_collection):    
+            net = inputs
+
+        if include_root_block:
+            with slim.arg_scope([slim.conv2d], activation_fn = None, normalizer_fn = None):
+                net = conv2d_same(net, 64, 7, stride = 2, scope = &#39;conv1&#39;)
+            net = slim.max_pool2d(net, [3, 3], stride = 2, scope = &#39;pool1&#39;)
+            net = slim.batch_norm(net, activation_fn = tf.nn.relu, scope = &#39;postnorm&#39;)
+
+        if global_pool:
+            net = tf.reduce_mean(net, [1, 2], name = &#39;pool5&#39;, keep_dims = True)
+
+        if num_classes is not None:
+            net = slim.conv2d(net, num_classes, [1, 1], activation_fn = None, normalizer_fn = None, scope = &#39;logits&#39;)    
+            end_points = slim.utils.convert_collection_to_dict(end_points_collection)
+
+            if num_classes is not None:
+                end_points[&#39;predictions&#39;] = slim.softmax(net, scope = &#39;predictions&#39;)
+
+            return net, end_points
+
+
+#定义50层的ResNet   
+def resnet_v2_50(inputs, num_classes = None, global_pool = True, reuse = None, scope = &#39;resnet_v2_50&#39;):    
+    blocks = [
+        Block(&#39;block1&#39;, bottleneck, [(256, 64, 1)] * 2 + [(256, 64, 2)]),
+        Block(&#39;block2&#39;, bottleneck, [(512, 128, 1)] * 3 + [(512, 128, 2)]),
+        Block(&#39;block3&#39;, bottleneck, [(1024, 256, 1)] * 5 + [(1024, 256, 2)]),
+        Block(&#39;block4&#39;, bottleneck, [(2048, 1024, 1)] * 3)]
+    return resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = True, reuse = reuse, scope = scope)     
+
+#定义101层的ResNet  
+def resnet_v2_101(inputs, num_classes = None, global_pool = True, reuse = None, scope = &#39;resnet_v2_101&#39;):     
+    blocks = [
+        Block(&#39;block1&#39;, bottleneck, [(256, 64, 1)] * 2 + [(256, 64, 2)]),
+        Block(&#39;block2&#39;, bottleneck, [(512, 128, 1)] * 3 + [(512, 128, 2)]),
+        Block(&#39;block3&#39;, bottleneck, [(1024, 256, 1)] * 22 + [(1024, 256, 2)]),
+        Block(&#39;block4&#39;, bottleneck, [(2048, 512, 1)] * 3)]
+    return resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = True, reuse = reuse, scope = scope)       
+
+#定义152层的ResNet  
+def resnet_v2_152(inputs, num_classes = None, global_pool = True, reuse = None, scope = &#39;resnet_v2_152&#39;):      
+    blocks = [
+        Block(&#39;block1&#39;, bottleneck, [(256, 64, 1)] * 2 + [(256, 64, 2)]),
+        Block(&#39;block2&#39;, bottleneck, [(512, 128, 1)] * 7 + [(512, 128, 2)]),
+        Block(&#39;block3&#39;, bottleneck, [(1024, 256, 1)] * 35 + [(1024, 256, 2)]),
+        Block(&#39;block4&#39;, bottleneck, [(2048, 512, 1)] * 3)]
+    return resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = True, reuse = reuse, scope = scope)        
+
+#定义200层的ResNet
+        def resnet_v2_200(inputs, num_classes = None, global_pool = True, reuse = None, scope = &#39;resnet_v2_200&#39;):      
+    blocks = [
+        Block(&#39;block1&#39;, bottleneck, [(256, 64, 1)] * 2 + [(256, 64, 2)]),
+        Block(&#39;block2&#39;, bottleneck, [(512, 128, 1)] * 23 + [(512, 128, 2)]),
+        Block(&#39;block3&#39;, bottleneck, [(1024, 256, 1)] * 35 + [(1024, 256, 2)]),
+        Block(&#39;block4&#39;, bottleneck, [(2048, 512, 1)] * 3)]
+    return resnet_v2(inputs, blocks, num_classes, global_pool, include_root_block = True, reuse = reuse, scope = scope)              
+
+def time_tensorflow_run(session, target, info_string):
+    num_steps_burn_in = 10
+    total_duration = 0.0
+    total_duration_squared = 0.0
+
+    for i in range(num_batches + num_steps_burn_in):
+        start_time = time.time()
+        _ = session.run(target)
+        duration = time.time() - start_time
+        if i &gt;= num_steps_burn_in:
+            if not i % 10:
+                print(&#39;%s: step %d, duration = %.3f&#39; %(datetime.now(), i - num_steps_burn_in, duration))            
+            total_duration += duration
+            total_duration_squared += duration * duration
+
+    mn = total_duration / num_batches
+    vr = total_duration_squared / num_batches - mn * mn
+    sd = math.sqrt(vr)
+    print(&#39;%s: %s across %d steps, %.3f +/- %.3f sec / batch&#39; %(datetime.now(), info_string, num_batches, mn, sd))             
+
+batch_size = 32
+height, width = 224, 224
+inputs = tf.random_uniform((batch_size, height, width, 3))
+with slim.arg_scope(resnet_arg_scope(is_training = False)):
+    net, end_points = resnet_v2_152(inputs, 1000)
+
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init)
+num_batches = 100
+time_tensorflow_run(sess, net, &quot;Forward&quot;)
+</code></pre>
 
             </div>
 
