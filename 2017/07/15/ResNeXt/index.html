@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	 <link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			
+    <title>
+    Xiang Peng
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+
+			    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+</head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_solarized.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">XIANG PENG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/网络结构分析/">网络结构分析</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">归档</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="archive-link" href="/archives/2017/07/">July 2017</a>
+	                    </ul>
+	        </li>
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/about/" title="简历">
+		                简历
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/group/" title="团队">
+		                团队
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/gallery/" title="图库">
+		                图库
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+		            
+		                <li><a href="https://github.com/ailib" class="icon fa-github"><span class="label">GitHub</span></a></li>
+		            
+		            
+		            
+		            
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(http://chuantu.biz/t6/2/1502627641x2319772668.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >ResNeXt网络分析</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p><strong>论文地址</strong>  <a href="https://arxiv.org/abs/1611.05431" target="_blank" rel="external">Aggregated Residual Transformations for Deep Neural Networks</a><br><strong>代码地址</strong><a href="https://github.com/facebook/fb.resnet.torch" target="_blank" rel="external">【Github】</a></p>
+<ul>
+<li>在 ImageNet 和 COCO 2015 竞赛中，共有 152 层的深度残差网络 ResNet 在图像分类、目标检测和语义分割各个分项都取得最好成绩，相关论文更是连续两次获得 CVPR 最佳论文。ResNet 作者之一何恺明在去到 Facebook AI 实验室后，继续改进工作提出了 ResNeXt。ResNeXt 采用多分支的同构结构，只需要设定较少的超参数，并且显露出在深度、宽度之外神经网络的另一个衡量指标——“基数”（cardinality）。<blockquote>
+<p>作者提出 ResNeXt 的主要原因在于：传统的要提高模型的准确率，都是加深或加宽网络，但是随着超参数数量的增加（比如channels数，filter size等等），网络设计的难度和计算开销也会增加。因此本文提出的 ResNeXt 结构可以在不增加参数复杂度的前提下提高准确率，同时还减少了超参数的数量。</p>
+</blockquote>
+</li>
+</ul>
+<p>###【摘要】<br>我们提出了是一个用于图像分类的简单、高度模块化的网络结构。我们构建这个网络的方法是重复一个修建模块，这个模块聚集了一组含有相同拓扑结构的转换（transformations）。采用这种简单设计的结果，是实现了一种多分支的同构结构，只需要设定很少的一些超参数新的维度，我们将其称之为“基数”（cardinality，transformation 集合的大小），这是衡量神经网络在深度（depth）和广度（width）之外的另一个重要因素。在ImageNet-1K数据集上，我们经验表明，即使在保持复杂性的限制条件下，增加基数也能够提高分类精度。此外，当我们增加容量时，增加基数比更深或更宽更有效。我们的模型代号为 ResNeXt，是我们进入比赛 ILSVRC 2016分类任务的技术基础，我们在 ILSVRC 比赛获得了第二名。进一步调查 ImageNet-5K 集上的 ResNeXt 和 COCO 检测集，也显示比 ResNet 对应更好的结果。</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>作者在论文中首先提到VGG，VGG主要采用堆叠网络来实现，之前的 ResNet 也借用了这样的思想。然后提到 Inception 系列网络，简单讲就是 split-transform-merge 的策略，但是 Inception 系列网络有个问题：<strong>网络的超参数设定的针对性比较强，当应用在别的数据集上时需要修改许多参数，因此可扩展性一般</strong>。</p>
+<p>于是重点来了，作者在这篇论文中提出网络 ResNeXt，同时采用 VGG 堆叠的思想和 Inception 的 split-transform-merge 思想，但是可扩展性比较强，可以认为是在增加准确率的同时基本不改变或降低模型的复杂度。这里提到一个名词cardinality，原文的解释是the size of the set of transformations，如下图 <strong>Figure 1</strong> 右边是 cardinality = 32 的样子，这里注意每个被聚合的拓扑结构都是一样的(这也是和 Inception 的差别，减轻设计负担)<br><img src="/2017/07/15/ResNeXt/1.png" alt="1.png" title=""></p>
+<p><strong>ResNeXt 保留了 ResNet 的堆叠Block，针对单个Blog的改进，将单个Path进行拆分，这样做有什么好处呢？</strong></p>
+<p>左图 64个卷积核（1<em>1，3</em>3，1*1）对所有的 input 进行卷积计算，右图通过网络拆分，4个channel一组，提高了网络的分工和局部适应性，32个path的输出向量按照pixel-wise求和（所有通道对应位置点相加），然后再与Base（x）相加。</p>
+<p>对于Path路径个数，作者给取了个名字叫 Cardinality，我们称为分支容量 或者 基数，这就是我们寻找的第二个超参数。另外还有一个 Bottleneck指的是在每一个path或者group中，中间过渡形态的feature map的channel数目（或者卷积核个数）。</p>
+<p>采用这种简单设计的结果，是实现了一种多分支的同构结构，只需要设定很少的一些超参数新的维度，我们将其称之为“基数”（cardinality，transformation 集合的大小），这是衡量神经网络在深度（depth）和广度（width）之外的另一个重要因素。</p>
+<p>当然还有一些数据证明 ResNeXt 网络的优越性，例如原文中的这句话：In particular, a 101-layer ResNeXt is able to achieve better accuracy than ResNet-200 but has only 50% complexity.</p>
+<p>Table 1 列举了 ResNet-50 和 ResNeXt-50 的内部结构，另外最后两行说明二者之间的参数复杂度差别不大。<br><img src="/2017/07/15/ResNeXt/2.png" alt="2.png" title=""></p>
+<p>接下来作者要开始讲本文提出的新的 block，举全连接层（Inner product）的例子来讲，我们知道全连接层的就是以下这个公式：<br>$$\sum_{i=1}^D w_i x_i=0$$<br>where $x = [x_1, x_2, …,x_D]$ is a D-channel input vector to the neuron and $w_i$ is a filter’s weight for the $i$-th channel.</p>
+<p>This operation (usually including some output nonlinearity) is referred to as a “neuron”. See Fig. 2.<br><img src="/2017/07/15/ResNeXt/3.png" alt="3.png" title=""></p>
+<p>然后作者的网络其实就是将其中的 $w_i x_i$替换成更一般的函数，这里用了一个很形象的词：Network in Neuron，式子如下：<br><img src="/2017/07/15/ResNeXt/4.png" alt="4.png" title=""></p>
+<p>其中C就是 cardinality，$T_i$ 有相同的拓扑结构（本文中就是三个卷积层的堆叠）。</p>
+<p>然后看看fig 3。这里作者展示了三种相同的 ResNeXt blocks。fig3.a 就是前面所说的aggregated residual transformations。 fig3.b 则采用两层卷积后 concatenate，再卷积，有点类似 Inception-ResNet，只不过这里的 paths 都是相同的拓扑结构。fig 3.c采用的是grouped convolutions，这个 group 参数就是 caffe 的 convolusion 层的 group 参数，用来限制本层卷积核和输入 channels 的卷积，最早应该是 AlexNet 上使用，可以减少计算量。这里 fig 3.c 采用32个 group，每个 group 的输入输出 channels 都是4，最后把channels合并。这张图的 fig3.c 和 fig1 的左边图很像，差别在于fig3.c的中间 filter 数量（此处为128，而fig 1中为64）更多。作者在文中明确说明这三种结构是严格等价的，并且用这三个结构做出来的结果一模一样，在本文中展示的是 fig3.c 的结果，因为 fig3.c 的结构比较简洁而且速度更快，<strong>a）为分割path形式       b）提前做了加法（concatenate）     c）通过 Group Conv 实现与 a、b等价的效果。</strong><br><img src="/2017/07/15/ResNeXt/5.png" alt="5.png" title=""></p>
+<p>Table 2 主要列举了一些参数，来说明 fig1 的左右两个结构的参数复杂度差不多。第二行的d表示每个path的中间channels数量，最后一行则表示整个block的宽度，是第一行C和第二行d的乘积。<br><img src="/2017/07/15/ResNeXt/6.png" alt="6.png" title=""></p>
+<h3 id="实验结果对比"><a href="#实验结果对比" class="headerlink" title="实验结果对比"></a>实验结果对比</h3><p>在实验中作者说明ResNeXt和ResNet-50/101的区别仅仅在于其中的block，其他都不变。贴一下作者的实验结果：相同层数的ResNet和ResNeXt的对比：（32*4d表示32个paths，每个path的宽度为4，如fig3）。实验结果表明ResNeXt和ResNet的参数复杂度差不多，但是其训练误差和测试误差都降低了。<br><img src="/2017/07/15/ResNeXt/7.png" alt="7.png" title=""><br>图 5：ImageNet-1K上的训练曲线。 （左）：ResNet / ResNeXt-50具有相同的复杂性（约41亿FLOP，约2500万参数）; （右）：ResNet / ResNeXt-101具有相同的复杂性（约78亿FLOP，约44万参数）</p>
+<p>下表说明不同的Cardinality和宽度效果<br><img src="/2017/07/15/ResNeXt/8.png" alt="8.png" title=""></p>
+<p>另一个实验结果的表格，主要说明增加Cardinality和增加深度或宽度的区别，增加宽度就是简单地增加filter channels。第一个是基准模型，增加深度和宽度的分别是第三和第四个，可以看到误差分别降低了0.3%和0.7%。但是第五个加倍了Cardinality，则降低了1.3%，第六个Cardinality加到64，则降低了1.6%。显然增加Cardianlity比增加深度或宽度更有效。<br><img src="/2017/07/15/ResNeXt/9.png" alt="9.png" title=""></p>
+<p>接下来这个表一方面证明了residual connection的有效性，也证明了aggregated transformations的有效性，控制变量的证明方式，比较好理解。<br><img src="/2017/07/15/ResNeXt/10.png" alt="10.png" title=""></p>
+<p>###对比结论<br>与 ResNet 相比，相同的参数个数，ResNeXt 结果更好；或者说同样的效果，ResNeXt的计算量更少，一个 50 层的 ResNeXt 网络，和 101 层的 ResNet 准确度接近。<strong>增大Cardinality比增大模型的width或者depth效果更好</strong>。因此全文看下来，作者的核心创新点就在于提出了 aggregrated transformations，用一种平行堆叠相同拓扑结构的blocks代替原来 ResNet 的三层卷积的block，在不明显增加参数量级的情况下提升了模型的准确率，同时由于拓扑结构相同，超参数也减少了，便于模型移植。</p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'thank you'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2017/07/15/ResNeXt/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2017/07/15/ResNeXt/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//thank you.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+            </ul>
+            
+            	<span id="busuanzi_container_site_pv">2017总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+			
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
