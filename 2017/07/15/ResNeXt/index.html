@@ -137,10 +137,10 @@
 <p>采用这种简单设计的结果，是实现了一种多分支的同构结构，只需要设定很少的一些超参数新的维度，我们将其称之为“基数”（cardinality，transformation 集合的大小），这是衡量神经网络在深度（depth）和广度（width）之外的另一个重要因素。</p>
 <p>当然还有一些数据证明 ResNeXt 网络的优越性，例如原文中的这句话：In particular, a 101-layer ResNeXt is able to achieve better accuracy than ResNet-200 but has only 50% complexity.</p>
 <p>Table 1 列举了 ResNet-50 和 ResNeXt-50 的内部结构，另外最后两行说明二者之间的参数复杂度差别不大。<br><img src="/2017/07/15/ResNeXt/2.png" alt="2.png" title=""></p>
-<p>接下来作者要开始讲本文提出的新的 block，举全连接层（Inner product）的例子来讲，我们知道全连接层的就是以下这个公式：<br>$$\sum_{i=1}^D w_i x_i=0$$<br>where $x = [x_1, x_2, …,x_D]$ is a D-channel input vector to the neuron and $w_i$ is a filter’s weight for the $i$-th channel.</p>
-<p>This operation (usually including some output nonlinearity) is referred to as a “neuron”. See Fig. 2.<br><img src="/2017/07/15/ResNeXt/3.png" alt="3.png" title=""></p>
-<p>然后作者的网络其实就是将其中的 $w_i x_i$替换成更一般的函数，这里用了一个很形象的词：Network in Neuron，式子如下：<br><img src="/2017/07/15/ResNeXt/4.png" alt="4.png" title=""></p>
-<p>其中C就是 cardinality，$T_i$ 有相同的拓扑结构（本文中就是三个卷积层的堆叠）。</p>
+<p>接下来作者要开始讲本文提出的新的 block，举全连接层（Inner product）的例子来讲，我们知道全连接层的就是以下这个公式：<br><img src="/2017/07/15/ResNeXt/11.jpg" alt="11.jpg" title=""></p>
+<p>This operation (usually including some output nonlinearity) is referred to as a “neuron”. See Fig. 2.<br></p>
+<p>然后作者的网络其实就是将其中的 <font size="5">w</font>i<font size="5">x</font>i替换成更一般的函数，这里用了一个很形象的词：Network in Neuron，式子如下：<br></p>
+<p>其中C就是 cardinality，<font size="4">T</font>i 有相同的拓扑结构（本文中就是三个卷积层的堆叠）。</p>
 <p>然后看看fig 3。这里作者展示了三种相同的 ResNeXt blocks。fig3.a 就是前面所说的aggregated residual transformations。 fig3.b 则采用两层卷积后 concatenate，再卷积，有点类似 Inception-ResNet，只不过这里的 paths 都是相同的拓扑结构。fig 3.c采用的是grouped convolutions，这个 group 参数就是 caffe 的 convolusion 层的 group 参数，用来限制本层卷积核和输入 channels 的卷积，最早应该是 AlexNet 上使用，可以减少计算量。这里 fig 3.c 采用32个 group，每个 group 的输入输出 channels 都是4，最后把channels合并。这张图的 fig3.c 和 fig1 的左边图很像，差别在于fig3.c的中间 filter 数量（此处为128，而fig 1中为64）更多。作者在文中明确说明这三种结构是严格等价的，并且用这三个结构做出来的结果一模一样，在本文中展示的是 fig3.c 的结果，因为 fig3.c 的结构比较简洁而且速度更快，<strong>a）为分割path形式       b）提前做了加法（concatenate）     c）通过 Group Conv 实现与 a、b等价的效果。</strong><br><img src="/2017/07/15/ResNeXt/5.png" alt="5.png" title=""></p>
 <p>Table 2 主要列举了一些参数，来说明 fig1 的左右两个结构的参数复杂度差不多。第二行的d表示每个path的中间channels数量，最后一行则表示整个block的宽度，是第一行C和第二行d的乘积。<br><img src="/2017/07/15/ResNeXt/6.png" alt="6.png" title=""></p>
 <h3 id="实验结果对比"><a href="#实验结果对比" class="headerlink" title="实验结果对比"></a>实验结果对比</h3><p>在实验中作者说明ResNeXt和ResNet-50/101的区别仅仅在于其中的block，其他都不变。贴一下作者的实验结果：相同层数的ResNet和ResNeXt的对比：（32*4d表示32个paths，每个path的宽度为4，如fig3）。实验结果表明ResNeXt和ResNet的参数复杂度差不多，但是其训练误差和测试误差都降低了。<br><img src="/2017/07/15/ResNeXt/7.png" alt="7.png" title=""><br>图 5：ImageNet-1K上的训练曲线。 （左）：ResNet / ResNeXt-50具有相同的复杂性（约41亿FLOP，约2500万参数）; （右）：ResNet / ResNeXt-101具有相同的复杂性（约78亿FLOP，约44万参数）</p>
