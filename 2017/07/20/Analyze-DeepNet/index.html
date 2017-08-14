@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	 <link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			
+    <title>
+    Xiang Peng
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+
+			    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+</head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_solarized.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">XIANG PENG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/网络结构分析/">网络结构分析</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">归档</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="archive-link" href="/archives/2017/07/">July 2017</a></li><li><a class="archive-link" href="/archives/2017/06/">June 2017</a>
+	                    </ul>
+	        </li>
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/about/" title="简历">
+		                简历
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/group/" title="团队">
+		                团队
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/gallery/" title="图库">
+		                图库
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+		            
+		                <li><a href="https://github.com/ailib" class="icon fa-github"><span class="label">GitHub</span></a></li>
+		            
+		            
+		            
+		            
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(http://chuantu.biz/t6/3/1502679586x2728278710.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >“深度”在神经网络中的价值</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <blockquote>
+<p>在计算机视觉领域，大部分的问题都已经开始使用深度神经网络进行解决，也确实取得了广泛的成功。在很多视觉任务中，如图像识别、语义分割、目标检测与跟踪、图像检索等，作为提取特征的CNN网络模型往往起到了关键的作用。我们经常见到最新的方法将基础网络换一下，性能就会得到很大的提升。因此，研究并设计一个更好的网络模型变得至关重要。下面这篇文章有助于更好地理解 ResNeXt，作者是微软亚洲研究院网络多媒体(IM)组实习生—赵黎明。文章介绍了其团队提出的 deep fusion 概念，沿着 deep fusion的思路研究了类似 ResNet、Highway、Inception等结构的深度融合网络，探索了“深度”在神经网络当中究竟带来了什么，并提出了一个新的网络模型，在不同数据集上均取得了不错的表现。</p>
+</blockquote>
+<p>经典的神经网络模型主要在“宽度”与“深度”方面进行不同程度的扩增。借助于大规模数据的训练，AlexNet、VGG-16、VGG-19等经典网络通过宽度或深度增加的参数可以有效地提升其模型的表达能力。但当网络变得越来越深，其训练难度也随之相应增加，反而会导致性能的下降。最近的ResNet和Highway Networks等方法通过引入Skip跳跃结构来试图解决极深网络在优化上带来的问题。<br>!<img src="/2017/07/20/Analyze-DeepNet/1.jpg" alt="1.jpg" title=""><br>ResNet和Highway Networks结构的简单示意图</p>
+<p>最新的一些研究尝试从其他角度来解释Highway、ResNet和GoogLeNet等网络结构表现优异的原因。其中王井东研究员、实习生魏祯和张婷以及曾文君研究员提出Deep Fusion (<a href="https://arxiv.org/abs/1605.07716" target="_blank" rel="external">Jingdong Wang, Zhen Wei, Ting Zhang, Wenjun Zeng: Deeply-Fused Nets. CoRR abs/1605.07716 (2016)</a>)深度融合的概念，认为不同分支的网络在中间层进行融合（加和或拼接等方式）能够(1)产生很多潜在的共享参数的基础网络，(2)同时优化信息的流动，(3)从而帮助深层网络的训练过程。<br>!<img src="/2017/07/20/Analyze-DeepNet/2.jpg" alt="2.jpg" title=""><br>Deep Fusion深度融合最简单形式的概念示意图</p>
+<p>我们可以发现很多有代表性的网络结构基本都可以按照深度融合的概念进行理解。除去LeNet、AlexNet、VGGNet等单分支网络，近两年提出的ResNet、Highway Networks、GoogLeNet系列等网络均可以看作是不同程度上的深度融合网络。在这个概念下，我们发现今年新的Inception-v4、FractalNet、DenseNet、ResNeXt以及我们新提出的Merge-and-Run等网络结构在融合方式上进行了更多的设计和探索，使得中间的融合次数和分支数目更多，从而得到更多的基础网络和更优的信息流动，最终取得更好的性能表现。<br>!<img src="/2017/07/20/Analyze-DeepNet/3.jpg" alt="3.jpg" title=""><br>近期一些深度神经网络模型的基本结构示意图</p>
+<p>康奈尔大学的Serge Belongie团队也有类似的观察与发现，他们解释ResNet其实是众多相对较浅的潜在网络的一个集成。在模型的测试阶段发现将网络中的一些模块去掉，剩下的网络模型依然具有不错的表现。<br>!<img src="/2017/07/20/Analyze-DeepNet/4.jpg" alt="4.jpg" title=""><br>将ResNet中的某些模块移除的实验示意图</p>
+<p>最近提出的一些新的深度神经网络方法也从侧面印证了这方面的研究，如ResNet with Stochastic Depth、FractalNet和Swapout等使用Drop-path的方法与上述移除Residual模块的研究有着异曲同工之妙。ResNet of ResNet、ResNeXt、Multi-Residual Networks和DenseNet等增加分支或路径数目的方法均得到了性能上的提升，从某种程度上验证了增加基础网络数目对整体网络模型的影响。</p>
+<p><strong>接下来介绍这篇文章</strong></p>
+<p>这篇文章<a href="https://arxiv.org/abs/1611.07718" target="_blank" rel="external">Liming Zhao, Jingdong Wang, Xi Li, Zhuowen Tu, and Wenjun Zeng. “Deep Convolutional Neural Networks with Merge-and-Run Mappings.”</a>.<strong>【Github】</strong>(<a href="https://github.com/ailib/fusenet)作者基于deep" target="_blank" rel="external">https://github.com/ailib/fusenet)作者基于deep</a> fusion的思路提出了一个新的网络模型，在不同数据集上均取得了不错的表现。</p>
+<h3 id="一、深度融合网络剖析"><a href="#一、深度融合网络剖析" class="headerlink" title="一、深度融合网络剖析"></a>一、深度融合网络剖析</h3><p>首先作者从网络结构和实验分析上展示这种多分支融合的网络跟多个潜在网络集成的关系。</p>
+<p>!<img src="/2017/07/20/Analyze-DeepNet/5.jpg" alt="5.jpg" title=""><br>多分支融合的网络与集成网络的结构类似</p>
+<p>通过上图可以发现多分支融合的网络形式可以近似很多潜在网络的集成过程，区别是没有中间的信息交互，只是他们共享对应层的网络参数。通过10组不同深度的网络结构实验发现，这样一个共享参数的集成网络与带信息交互的深度融合网络性能表现很相似。<br>!<img src="/2017/07/20/Analyze-DeepNet/6.jpg" alt="6.jpg" title=""><br>深度融合网络与集成网络的表现类似</p>
+<h3 id="二、深度带来更多组成网络"><a href="#二、深度带来更多组成网络" class="headerlink" title="二、深度带来更多组成网络"></a>二、深度带来更多组成网络</h3><p>下一步就可以利用集成学习中的一些思路来指导我们对该类型的深度融合网络进行剖析。首先是研究其潜在的基础网络数目，很明显上面图中融合3次的网络能够组合8个基础网络，即2^3个。那么我们可以发现增加融合次数可以提升基础网络的组合数目。那么像ResNet、Highway、Inception等形式的网络，增加“深度”带来的一个影响就是增加了其潜在基础网络的组合数目(Ensemble Size)。<br>!<img src="/2017/07/20/Analyze-DeepNet/7.jpg" alt="7.jpg" title=""><br>不同融合次数会得到不同数目的组合网络(路径)</p>
+<p>作者通过实验在不同深度的网络结构上验证了：增加组合数目能像传统Ensemble理论中增加Ensemble Size一样提升整体性能。<br>!<img src="/2017/07/20/Analyze-DeepNet/8.jpg" alt="8.jpg" title=""><br>较多的组合网络数目能够取得更好的结果</p>
+<p>作者也通过实验在不同深度的网络结构上验证了增加组合网络数目能够提升整体性能，这也与传统Ensemble理论中增加Ensemble Size能提升性能的结论相吻合。我们可以看到ResNet在增加深度的同时，极大地增加了组合数目，这也是其性能优异的原因之一。</p>
+<h3 id="三、深度影响整体性能"><a href="#三、深度影响整体性能" class="headerlink" title="三、深度影响整体性能"></a>三、深度影响整体性能</h3><p>作者继续研究每一个基础组合网络，并且探索在深度融合的过程中其相互之间会产生怎样的影响。对比每个网络单独分开训练得到的模型，我们发现，深度融合网络里较深的组合网络性能得到了提升，但较浅的组合网络性能反而下降了。我们猜想在训练过程中，由于浅层的网络容易收敛，它们能够帮助深层的网络进行优化。但深度融合网络的各个潜在的组成网络是共享参数的，极深的网络可能会影响较浅网络的求解空间与难度，从而产生相互影响性能往中间靠拢的现象。<br>!<img src="/2017/07/20/Analyze-DeepNet/9.jpg" alt="9.jpg" title=""><br>每一个单独的组成网络行为分析</p>
+<p>既然我们认为最终的表现是一种集成的近似，那么我们是否可以着手寻找更优的组合网络以达到整体性能的提升？通过上述组合网络之间相互影响的启发，我们认为极深的网络会产生“拖后腿”的效果，反而较深但又不是特别深的“中间”网络会对结果影响比较大。上图的实验结果也验证了我们的这个想法：（a）显示了每个组成网络由于共享参数导致的性能变化；（b）显示了每个组成网络对整体网络（ensemble）的相对贡献程度。</p>
+<p>我们依然需要浅层网络来帮助训练较深网络，而且实际设计神经网络的时候很难做到只保留中间深度的网络结构。那么一个折中的方案是把这里面最深的组成网络去掉，这样看看对结果会产生什么影响。<br>!<img src="/2017/07/20/Analyze-DeepNet/10.jpg" alt="10.jpg" title=""><br>去除最深的组成网络（重新训练或只是测试时候去除）</p>
+<p>上图三个方法的实验结果表明，去除极深的组成网络不会对整体性能产生太大影响，有时候反而会提高最终结果。<br>!<img src="/2017/07/20/Analyze-DeepNet/11.jpg" alt="11.jpg" title=""><br>去除极深的组成网络不会影响太大，大部分情况下反而会提升性能</p>
+<h3 id="四、提出新的方法"><a href="#四、提出新的方法" class="headerlink" title="四、提出新的方法"></a>四、提出新的方法</h3><p>基于上述观察，作者认为一个好的网络结构应该包含如下两个特性：足够多的潜在网络数目，以及足够好的组成网络。最简单的策略是去掉“拖后腿”的极深网络，将其变成“中间”深的组成网络。下面是作者提出的方法：<br>!<img src="/2017/07/20/Analyze-DeepNet/12.jpg" alt="12.jpg" title=""><br>基于ResNet的形式，我们提出新的网络结构(b)和(c)</p>
+<p>基于ResNet的形式，我们提出的Inception-Like结构与Merge-and-Run结构都去除了极深的那一条线路，但是Inception-Like的组合数目比相同参数下的ResNet要少，因此我们认为Merge-and-Run形式比较符合我们的分析与观察。最终的实验结果也确实验证了这一想法，而且跟上面的实验观察相吻合：Inception-Like没有极深网络的影响，更加容易训练或收敛，比ResNet会稍好一点，与上述的Ensemble-7与Ensemble-8的实验结果相似。Merge-and-Run结构比Inception-Like的潜在网络数目多，最终结果也是比Inception-Like的表现要好。<br>!<img src="/2017/07/20/Analyze-DeepNet/13.jpg" alt="13.jpg" title=""><br>ResNet, Inception-Like和Merge-and-Run在不同数据集上的对比</p>
+<p>在ImageNet结果上也验证了我们前面的论述 (我们的方法用DFN-MR表示)：<br>!<img src="/2017/07/20/Analyze-DeepNet/14.jpg" alt="14.jpg" title=""><br>作者提出的DFN-MR与ResNet在ImageNet数据集上的对比</p>
+<h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h3><p>目前一个研究热点是在深度神经网络中引入一个新的维度：潜在的组成网络数目(Ensemble Size)。可以发现像 ResNet、Highway、Inception等网络增加“深度”的同时，实际增加了这个网络数目。此外，我们的工作发现极深网络除了能增加潜在网络数目外，对整体性能的贡献并不是最大的。反而会影响其它的组成网络，导致最终的结果受到影响。作者按照“不减少组成网络数目”和“避免极深组成网络”这两个原则，设计出新的网络结构，发现在不同数据集上总是表现优异。后续工作可以围绕当前分析的内容，最优化提出的设计指标与原则，得到更容易训练性能更好的网络模型。</p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'thank you'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2017/07/20/Analyze-DeepNet/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2017/07/20/Analyze-DeepNet/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//thank you.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+            </ul>
+            
+            	<span id="busuanzi_container_site_pv">2017总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+			
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
