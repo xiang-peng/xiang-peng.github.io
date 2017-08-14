@@ -70,7 +70,7 @@
 	            <a href="#s1">归档</a>
 	                    <ul class="submenu">
 	                        <li>
-	                        <a class="archive-link" href="/archives/2017/07/">July 2017</a>
+	                        <a class="archive-link" href="/archives/2017/07/">July 2017</a></li><li><a class="archive-link" href="/archives/2017/06/">June 2017</a>
 	                    </ul>
 	        </li>
 	        
@@ -126,31 +126,31 @@
 <li><strong>ResNet</strong> —MSRA何凯明团队的Residual Networks，在2015年ImageNet上大放异彩，在ImageNet的classification、detection、localization以及COCO的detection和segmentation上均斩获了第一名的成绩，而且Deep Residual Learning for Image Recognition也获得了CVPR2016的best paper，实在是实至名归。就让我们来观摩大神的这篇上乘之作。</li>
 </ul>
 <h2 id="ResNet要解决的问题"><a href="#ResNet要解决的问题" class="headerlink" title="ResNet要解决的问题"></a>ResNet要解决的问题</h2><p>首先一个问题是 vanishing/exploding gradients，即梯度的消失或发散。这就导致训练难以收敛。但是随着 normalized initialization and intermediate normalization layers的提出，解决了这个问题。</p>
-<p>当收敛问题解决后，又一个问题暴露出来：随着网络深度的增加，系统精度得到饱和之后，迅速的下滑。让人意外的是这个性能下降不是过拟合导致的。对一个合适深度的模型加入额外的层数导致训练误差变大。如下图所示：<br><img src="/2017/07/01/ResNet/1.png" alt="1.png" title=""><br>现在浅层的网络（shallower network）无法明显提升网络的识别效果了，所以现在要解决的问题就是怎样在加深网络的情况下又解决训练误差变大的问题。如果我们加入额外的 层只是一个 identity mapping，那么随着深度的增加，训练误差并没有随之增加。所以我们认为可能存在另一种构建方法，随着深度的增加，训练误差不会增加，只是我们没有找到该方法而已。</p>
-<h2 id="ResNet的解决方案"><a href="#ResNet的解决方案" class="headerlink" title="ResNet的解决方案"></a>ResNet的解决方案</h2><p>ResNet引入了残差网络结构（residual network），通过残差网络，可以把网络层弄的很深，据说现在达到了1000多层，最终的网络分类的效果也是非常好，残差网络的基本结构如下图所示 :<br><img src="/2017/07/01/ResNet/2.png" alt="2.png" title=""><br>即增加一个identity mapping（恒等映射），将原始所需要学的函数H(x)转换成F(x)+x，而作者认为这两种表达的效果相同，但是优化的难度却并不相同，作者假设F(x)的优化 会比H(x)简单的多。这一想法也是源于图像处理中的残差向量编码，通过一个reformulation，将一个问题分解成多个尺度直接的残差问题，能够很好的起到优化训练的效果。</p>
+<p>当收敛问题解决后，又一个问题暴露出来：随着网络深度的增加，系统精度得到饱和之后，迅速的下滑。让人意外的是这个性能下降不是过拟合导致的。对一个合适深度的模型加入额外的层数导致训练误差变大。如下图所示：<br><img src="/2017/06/25/ResNet/1.png" alt="1.png" title=""><br>现在浅层的网络（shallower network）无法明显提升网络的识别效果了，所以现在要解决的问题就是怎样在加深网络的情况下又解决训练误差变大的问题。如果我们加入额外的 层只是一个 identity mapping，那么随着深度的增加，训练误差并没有随之增加。所以我们认为可能存在另一种构建方法，随着深度的增加，训练误差不会增加，只是我们没有找到该方法而已。</p>
+<h2 id="ResNet的解决方案"><a href="#ResNet的解决方案" class="headerlink" title="ResNet的解决方案"></a>ResNet的解决方案</h2><p>ResNet引入了残差网络结构（residual network），通过残差网络，可以把网络层弄的很深，据说现在达到了1000多层，最终的网络分类的效果也是非常好，残差网络的基本结构如下图所示 :<br><img src="/2017/06/25/ResNet/2.png" alt="2.png" title=""><br>即增加一个identity mapping（恒等映射），将原始所需要学的函数H(x)转换成F(x)+x，而作者认为这两种表达的效果相同，但是优化的难度却并不相同，作者假设F(x)的优化 会比H(x)简单的多。这一想法也是源于图像处理中的残差向量编码，通过一个reformulation，将一个问题分解成多个尺度直接的残差问题，能够很好的起到优化训练的效果。</p>
 <p>这里我们首先求取残差映射 F(x):= H(x)-x，那么原先的映射就是 F(x)+x。尽管这两个映射应该都可以近似理论真值映射 the desired functions (as hypothesized)，但是它俩的学习难度是不一样的。</p>
 <p>这种改写启发于 图1中性能退化问题违反直觉的现象。正如前言所说，如果增加的层数可以构建为一个 identity mappings，那么增加层数后的网络训练误差应该不会增加，与没增加之前相比较。性能退化问题暗示多个非线性网络层用于近似identity mappings 可能有困难。使用残差学习改写问题之后，如果identity mappings 是最优的，那么优化问题变得很简单，直接将多层非线性网络参数趋0。</p>
 <p>实际中，identity mappings 不太可能是最优的，但是上述改写问题可能对问题提供有效的预先处理 (provide reasonable preconditioning)。如果最优函数接近identity mappings，那么优化将会变得容易些。 实验证明该思路是对的。</p>
 <p>这个Residual block通过shortcut connection实现，通过shortcut将这个block的输入和输出进行一个element-wise的加叠，这个简单的加法并不会给网络增加额外的参数和计算量，同时却可以大大增加模型的训练速度、提高训练效果，并且当模型的层数加深时，这个简单的结构能够很好的解决退化问题。</p>
-<h3 id="Network-Architectures"><a href="#Network-Architectures" class="headerlink" title="Network Architectures"></a>Network Architectures</h3><img src="/2017/07/01/ResNet/3.png" alt="3.png" title="">
+<h3 id="Network-Architectures"><a href="#Network-Architectures" class="headerlink" title="Network Architectures"></a>Network Architectures</h3><img src="/2017/06/25/ResNet/3.png" alt="3.png" title="">
 <p>首先构建了一个18层和一个34层的plain网络，即将所有层进行简单的铺叠，然后构建了一个18层和一个34层的residual网络，仅仅是在plain上插入了shortcut，而且这两个网络的参数量、计算量相同，并且和之前有很好效果的VGG-19相比，计算量要小很多。（36亿FLOPs VS 196亿FLOPs，FLOPs即每秒浮点运算次数。）这也是作者反复强调的地方，也是这个模型最大的优势所在。</p>
 <p>Plain Network 主要是受 VGG 网络启发，主要采用3*3滤波器，遵循两个设计原则：1）对于相同输出特征图尺寸，卷积层有相同个数的滤波器，2）如果特征图尺寸缩小一半，滤波器个数加倍以保持每个层的计算复杂度。通过步长为2的卷积来进行降采样。一共34个权重层。需要指出,这个网络与VGG相比，滤波器要少，复杂度要小。</p>
 <h2 id="对ResNet的解读"><a href="#对ResNet的解读" class="headerlink" title="对ResNet的解读"></a>对ResNet的解读</h2><p>基本的残差网络其实可以从另一个角度来理解，如下图所示： </p>
-<img src="/2017/07/01/ResNet/9.png" alt="9.png" title="">
+<img src="/2017/06/25/ResNet/9.png" alt="9.png" title="">
 <p>残差网络单元其中可以分解成右图的形式，从图中可以看出，残差网络其实是由多种路径组合的一个网络，直白了说，残差网络其实是很多并行子网络的组合，整个残差网络其实相当于一个多人投票系统（Ensembling）。下面来说明为什么可以这样理解</p>
 <h3 id="删除网络的一部分"><a href="#删除网络的一部分" class="headerlink" title="删除网络的一部分"></a>删除网络的一部分</h3><p>如果把残差网络理解成一个Ensambling系统，那么网络的一部分就相当于少一些投票的人，如果只是删除一个基本的残差单元，对最后的分类结果应该影响很小；而最后的分类错误率应该适合删除的残差单元的个数成正比的，论文里的结论也印证了这个猜测。<br>下图是比较VGG和ResNet分别删除一层网络的分类错误率变化 </p>
-<img src="/2017/07/01/ResNet/10.png" alt="10.png" title="">
+<img src="/2017/06/25/ResNet/10.png" alt="10.png" title="">
 <p>下图是ResNet分类错误率和删除的基本残差网络单元个数的关系 </p>
-<img src="/2017/07/01/ResNet/11.png" alt="11.png" title="">
+<img src="/2017/06/25/ResNet/11.png" alt="11.png" title="">
 <h3 id="ResNet的真面目"><a href="#ResNet的真面目" class="headerlink" title="ResNet的真面目"></a>ResNet的真面目</h3><p>ResNet的确可以做到很深，但是从上面的介绍可以看出，网络很深的路径其实很少，大部分的网络路径其实都集中在中间的路径长度上，如下图所示： </p>
-<img src="/2017/07/01/ResNet/12.png" alt="12.png" title="">
+<img src="/2017/06/25/ResNet/12.png" alt="12.png" title="">
 <p>从这可以看出其实ResNet是由大多数中度网络和一小部分浅度网络和深度网络组成的，说明虽然表面上ResNet网络很深，但是其实起实际作用的网络层数并没有很深，我们能来进一步阐述这个问题，我们知道网络越深，梯度就越小，如下图所示 ：</p>
-<img src="/2017/07/01/ResNet/13.png" alt="13.png" title="">
+<img src="/2017/06/25/ResNet/13.png" alt="13.png" title="">
 <p>而通过各个路径长度上包含的网络数乘以每个路径的梯度值，我们可以得到ResNet真正起作用的网络是什么样的，如下图所示 ：</p>
-<img src="/2017/07/01/ResNet/14.png" alt="14.png" title="">
+<img src="/2017/06/25/ResNet/14.png" alt="14.png" title="">
 <p>我们可以看出大多数的梯度其实都集中在中间的路径上，论文里称为effective path。<br>从这可以看出其实ResNet只是表面上看起来很深，事实上网络却很浅。<br>所示ResNet真的解决了深度网络的梯度消失的问题了吗？似乎没有，ResNet其实就是一个多人投票系统。</p>
-<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><p><strong>1.  Cifar10</strong><br><img src="/2017/07/01/ResNet/4.png" alt="4.png" title=""></p>
-<p><strong>2.  ImageNet</strong><br>针对 ImageNet网络的实现，图像以较小的边缩放至[256,480]，这样便于 scale augmentation，然后从中随机裁出 224*224。<br><img src="/2017/07/01/ResNet/5.png" alt="5.png" title=""></p>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><p><strong>1.  Cifar10</strong><br><img src="/2017/06/25/ResNet/4.png" alt="4.png" title=""></p>
+<p><strong>2.  ImageNet</strong><br>针对 ImageNet网络的实现，图像以较小的边缩放至[256,480]，这样便于 scale augmentation，然后从中随机裁出 224*224。<br><img src="/2017/06/25/ResNet/5.png" alt="5.png" title=""></p>
 <p>在plain上观测到明显的退化现象，而且ResNet上不仅没有退化，34层网络的效果反而比18层的更好，而且不仅如此，ResNet的收敛速度比plain的要快得多。</p>
 <p><strong>对于shortcut的方式，作者提出了三个选项：</strong></p>
 <p>A. 使用恒等映射，如果residual block的输入输出维度不一致，对增加的维度用0来填充；</p>
@@ -158,9 +158,9 @@
 <p>C. 对于所有的block均使用线性投影。</p>
 <p>对这三个选项都进行了实验，发现虽然C的效果好于B的效果好于A的效果，但是差距很小，因此线性投影并不是必需的，而使用0填充时，可以保证模型的复杂度最低，这对于更深的网络是更加有利的。</p>
 <p>进一步实验，作者又提出了deeper的residual block：</p>
-<img src="/2017/07/01/ResNet/8.png" alt="8.png" title="">
-<h2 id="计算时间和层数"><a href="#计算时间和层数" class="headerlink" title="计算时间和层数"></a>计算时间和层数</h2><img src="/2017/07/01/ResNet/6.png" alt="6.png" title="">
-<img src="/2017/07/01/ResNet/7.png" alt="7.png" title="">
+<img src="/2017/06/25/ResNet/8.png" alt="8.png" title="">
+<h2 id="计算时间和层数"><a href="#计算时间和层数" class="headerlink" title="计算时间和层数"></a>计算时间和层数</h2><img src="/2017/06/25/ResNet/6.png" alt="6.png" title="">
+<img src="/2017/06/25/ResNet/7.png" alt="7.png" title="">
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><pre><code class="python">#coding:utf-8
 #导入对应的库
 import collections
@@ -411,8 +411,8 @@ $('.btn_click_load').click(function() {
 -->
 <script type="text/javascript">
     var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2017/07/01/ResNet/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://yoursite.com/2017/07/01/ResNet/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://yoursite.com/2017/06/25/ResNet/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2017/06/25/ResNet/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 
