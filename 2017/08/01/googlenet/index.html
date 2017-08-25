@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	 <link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			
+    <title>
+    Xiang Peng
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+
+			    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+</head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_solarized.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">XIANG PENG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/机器学习/">机器学习</a></li><li><a class="category-link" href="/categories/网络结构分析/">网络结构分析</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">归档</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="archive-link" href="/archives/2017/08/">August 2017</a></li><li><a class="archive-link" href="/archives/2017/07/">July 2017</a></li><li><a class="archive-link" href="/archives/2017/06/">June 2017</a>
+	                    </ul>
+	        </li>
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/about/" title="简历">
+		                简历
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/group/" title="团队">
+		                团队
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/gallery/" title="图库">
+		                图库
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+		            
+		                <li><a href="https://github.com/ailib" class="icon fa-github"><span class="label">GitHub</span></a></li>
+		            
+		            
+		                <li><a href="/img/wechat.png" class="icon fa-wechat"><span class="label">Facebook</span></a></li>
+		            
+		            
+		                <li><a href="/img/qq.png" class="icon fa-qq"><span class="label">Instagram</span></a></li>
+		            
+		            
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(http://chuantu.biz/t6/20/1503642966x1885327811.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >GoogLeNet 之 Inception(V1-V4)</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>论文地址：</p>
+<ol>
+<li><p>Inception[V1]: <a href="https://arxiv.org/abs/1409.4842" target="_blank" rel="external">Going Deeper with Convolutions</a></p>
+</li>
+<li><p>Inception[V2]: <a href="https://arxiv.org/abs/1502.03167" target="_blank" rel="external">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a></p>
+</li>
+<li><p>Inception[V3]: <a href="https://arxiv.org/abs/1512.00567" target="_blank" rel="external">Rethinking the Inception Architecture for Computer Vision</a></p>
+</li>
+<li><p>Inception[V4]: <a href="https://arxiv.org/abs/1602.07261" target="_blank" rel="external">Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning</a></p>
+</li>
+</ol>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本文将要介绍的是在 ILSVRC 2014 取得了最好的成绩的 GoogLeNet，及其核心结构—— Inception。早期的V1 结构借鉴了 <a href="https://arxiv.org/abs/1312.4400" target="_blank" rel="external">NIN</a> 的设计思路，对网络中的传统卷积层进行了修改，针对限制深度神经网络性能的主要问题，一直不断改进延伸到 V4：</p>
+<ul>
+<li>参数空间大，容易过拟合，且训练数据集有限；</li>
+<li>网络结构复杂，计算资源不足，导致难以应用；</li>
+<li>深层次网络结构容易出现梯度弥散，模型性能下降。</li>
+</ul>
+<h3 id="Inception"><a href="#Inception" class="headerlink" title="Inception"></a>Inception</h3><p>GoogLeNet 对网络中的传统卷积层进行了修改，提出了被称为 <strong>Inception</strong> 的结构<font size="2">（是不是让人想到《盗梦空间》中一层层的梦境呢）</font>，用于增加网络深度和宽度，提高深度神经网络性能。</p>
+<p>其各个版本的设计思路：</p>
+<h4 id="1、Inception-V1"><a href="#1、Inception-V1" class="headerlink" title="1、Inception V1"></a>1、Inception V1</h4><p>这是GoogLeNet的最早版本，和vgg是2014年imagenet竞赛的双雄，这两类模型结构有一个共同特点是go deeper。跟vgg不同的是，googlenet做了更大胆的网络上的尝试而不是像vgg继承了lenet以及alexnet的一些框架，该模型虽然 有22层，但大小却比alexnet和vgg都小很多，性能优越。。之所以名为“GoogLeNet”而非“GoogleNet”,文章说是为了向早期的LeNet致敬。</p>
+<h5 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h5><p>深度学习以及神经网络快速发展，人们不再只关注更给力的硬件、更大的数据集、更大的模型，而是更在意新的idea、新的算法以及模型的改进。</p>
+<p>一般来说，提升网络性能最直接的办法就是增加网络深度和宽度，这也就意味着巨量的参数。但是，巨量参数容易产生<strong>过拟合</strong>也会大大增加<strong>计算量</strong>。</p>
+<p>文章认为解决上述两个缺点的根本方法是将全连接甚至一般的卷积都转化为稀疏连接。一方面现实生物神经系统的连接也是稀疏的，另一方面<a href="https://arxiv.org/abs/1310.6343" target="_blank" rel="external">Provable bounds for learning some deep representations</a> 表明：对于大规模稀疏的神经网络，可以通过分析激活值的统计特性和对高度相关的输出进行聚类来逐层构建出一个最优网络。<strong>这点表明臃肿的稀疏网络可能被不失性能地简化</strong>。 虽然数学证明有着严格的条件限制，但Hebbian准则有力地支持了这一点：fire together,wire together。</p>
+<p>早些的时候，为了打破网络对称性和提高学习能力，传统的网络都使用了随机稀疏连接。但是，计算机软硬件对非均匀稀疏数据的计算效率很差，所以在AlexNet中又重新启用了全连接层，目的是为了更好地优化并行运算。</p>
+<p>所以，现在的问题是有没有一种方法，<strong>既能保持网络结构的稀疏性，又能利用密集矩阵的高计算性能</strong>。大量的文献表明可以将稀疏矩阵聚类为较为密集的子矩阵来提高计算性能，据此论文提出了名为Inception 的结构来实现此目的。</p>
+<h5 id="Architectural-Details"><a href="#Architectural-Details" class="headerlink" title="Architectural Details"></a>Architectural Details</h5><p><strong>Inception</strong> 结构的主要思路是怎样用密集成分来近似最优的局部稀疏结构。<br>作者首先提出下图这样的基本结构：<br><img src="/2017/08/01/googlenet/1.jpg" alt="1.jpg" title=""></p>
+<p>对上图做以下说明：<br>1 . 采用不同大小的卷积核意味着不同大小的感受野，最后拼接意味着不同尺度特征的融合；<br>2 . 之所以卷积核大小采用1、3和5，主要是为了方便对齐。设定卷积步长stride=1之后，只要分别设定pad=0、1、2，那么卷积之后便可以得到相同维度的特征，然后这些特征就可以直接拼接在一起了；<br>3 . 文章说很多地方都表明pooling挺有效，所以Inception里面也嵌入了。<br>4 . 网络越到后面，特征越抽象，而且每个特征所涉及的感受野也更大了，因此随着层数的增加，3x3和5x5卷积的比例也要增加。</p>
+<p><strong>但是，使用5x5的卷积核仍然会带来巨大的计算量</strong>。 为此，文章借鉴<a href="https://arxiv.org/abs/1312.4400" target="_blank" rel="external">NIN</a>，采用1x1卷积核来进行降维。 </p>
+<blockquote>
+<p>例如：上一层的输出为100x100x128，经过具有256个输出的5x5卷积层之后(stride=1，pad=2)，输出数据为100x100x256。其中，卷积层的参数为128x5x5x256。假如上一层输出先经过具有32个输出的1x1卷积层，再经过具有256个输出的5x5卷积层，那么最终的输出数据仍为为100x100x256，但卷积参数量已经减少为128x1x1x32 + 32x5x5x256，大约减少了4倍。</p>
+</blockquote>
+<p>具体改进后的Inception Module如下图：<br><img src="/2017/08/01/googlenet/2.jpg" alt="2.jpg" title=""></p>
+<p>GoogLeNet V1的整体结构如下图：<br><img src="/2017/08/01/googlenet/3.jpg" alt="3.jpg" title=""></p>
+<p>对上图做如下说明：<br>1 . 显然GoogLeNet采用了模块化的结构，方便增添和修改；<br>2 . 网络最后采用了average pooling来代替全连接层，想法来自NIN,事实证明可以将TOP1 accuracy提高0.6%。但是，实际在最后还是加了一个全连接层，主要是为了方便以后大家finetune；<br>3 . 虽然移除了全连接，但是网络中依然使用了Dropout ;<br>4 . 为了避免梯度消失，网络额外增加了2个辅助的softmax用于向前传导梯度。文章中说这两个辅助的分类器的loss应该加一个衰减系数，但看caffe中的model也没有加任何衰减。此外，实际<strong>测试</strong>的时候，这两个额外的softmax会被去掉。</p>
+<p>下图是一个比较清晰的结构图：<br><img src="/2017/08/01/googlenet/4.jpg" alt="4.jpg" title=""></p>
+<h5 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h5><p>GoogLeNet是谷歌团队为了参加ILSVRC 2014比赛而精心准备的，为了达到最佳的性能，除了使用上述的网络结构外，还做了大量的辅助工作：包括训练多个model求平均、裁剪不同尺度的图像做多次验证等等。详细的这些可以参看文章的实验部分。</p>
+<p>本文的主要想法其实是想通过构建密集的块结构来近似最优的稀疏结构，从而达到提高性能而又不大量增加计算量的目的。GoogleNet的caffemodel大小约50M，但性能却很优异。</p>
+<h4 id="2、Inception-V2"><a href="#2、Inception-V2" class="headerlink" title="2、Inception V2"></a>2、Inception V2</h4><p>Inception V2 学习了 VGG 用两个3´3的卷积代替5´5的大卷积，在降低参数的同时建立了更多的非线性变换，使得 CNN 对特征的学习能力更强：<br><img src="/2017/08/01/googlenet/5.jpg" alt="两个3´3的卷积层功能类似于一个5´5的卷积层" title="两个3´3的卷积层功能类似于一个5´5的卷积层"></p>
+<p>另外提出了著名的 <strong>Batch Normalization</strong>（以下简称BN）方法(<a href="http://blog.csdn.net/app_12062011/article/details/57083447" target="_blank" rel="external">这里</a>有介绍,另外<a href="http://www.jianshu.com/p/4270f5acc066.softmax" target="_blank" rel="external">BN的反向传导</a>,以及<a href="http://blog.csdn.net/u014313009/article/details/51045303" target="_blank" rel="external">梯度计算</a>)。BN 是一个非常有效的正则化方法，可以让大型卷积网络的训练速度加快很多倍，同时收敛后的分类准确率也可以得到大幅提高。BN 在用于神经网络某层时，会对每一个 mini-batch 数据的内部进行标准化（<strong>normalization</strong>）处理，使输出规范化到 N(0,1) 的正态分布，减少了 <strong>Internal Covariate Shift</strong>（内部神经元分布的改变）。</p>
+<blockquote>
+<p>补充：在 TensorFlow 1.0.0 中采用 tf.image.per_image_standardization() 对图像进行标准化，旧版为 tf.image.per_image_whitening。</p>
+</blockquote>
+<p>BN 的论文指出，传统的深度神经网络在训练时，每一层的输入的分布都在变化，导致训练变得困难，我们只能使用一个很小的学习速率解决这个问题。而对每一层使用 BN 之后，我们就可以有效地解决这个问题，学习速率可以增大很多倍，达到之前的准确率所需要的迭代次数只有<strong>1/14</strong>，训练时间大大缩短。而达到之前的准确率后，可以继续训练，并最终取得远超于 Inception V1 模型的性能—— top-5 错误率 <strong>4.8%</strong>，已经优于人眼水平。因为 BN 某种意义上还起到了正则化的作用，所以可以减少或者取消 <strong>Dropout</strong> 和 <strong>LRN</strong>，简化网络结构。</p>
+<h4 id="3、Inception-V3"><a href="#3、Inception-V3" class="headerlink" title="3、Inception V3"></a>3、Inception V3</h4><h5 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h5><p>14年以来，构建更深的网络逐渐成为主流，但是模型的变大也使计算效率越来越低。这里，文章试图找到一种方法在<strong>扩大网络的同时又尽可能地发挥计算性能</strong>。</p>
+<p>首先，GoogLeNet V1出现的同期，性能与之接近的大概只有VGGNet了，并且二者在图像分类之外的很多领域都得到了成功的应用。但是相比之下，GoogLeNet的计算效率明显高于VGGNet，大约只有500万参数，只相当于Alexnet的1/12(GoogLeNet的caffemodel大约50M，VGGNet的caffemodel则要超过600M)。</p>
+<p>GoogLeNet的表现很好，但是，如果想要通过简单地放大Inception结构来构建更大的网络，则会立即提高计算消耗。此外，在V1版本中，文章也没给出有关构建Inception结构注意事项的清晰描述。因此，在文章中作者<strong>首先给出了一些已经被证明有效的用于放大网络的通用准则和优化方法</strong>。这些准则和方法适用但不局限于Inception结构。</p>
+<h5 id="General-Design-Principles"><a href="#General-Design-Principles" class="headerlink" title="General Design Principles"></a>General Design Principles</h5><p> 下面的准则来源于大量的实验，因此包含一定的推测，但实际证明基本都是有效的。</p>
+<p><strong>1 . 避免表达瓶颈，特别是在网络靠前的地方。</strong><br>信息流前向传播过程中显然不能经过高度压缩的层，即表达瓶颈。从input到output，feature map的宽和高基本都会逐渐变小，但是不能一下子就变得很小。比如你上来就来个kernel = 7, stride = 5 ,这样显然不合适。<br>另外输出的维度channel，一般来说会逐渐增多(每层的num_output)，否则网络会很难训练。（特征维度并不代表信息的多少，只是作为一种估计的手段）</p>
+<p><strong>2 . 高维特征更易处理。 高维特征更易区分，会加快训练。</strong></p>
+<p><strong>3 . 可以在低维嵌入上进行空间汇聚而无需担心丢失很多信息。</strong><br>比如在进行3x3卷积之前，可以对输入先进行降维而不会产生严重的后果。假设信息可以被简单压缩，那么训练就会加快。</p>
+<p><strong>4 . 平衡网络的宽度与深度。</strong><br>上述的这些并不能直接用来提高网络质量，而仅用来在大环境下作指导。</p>
+<h5 id="Factorizing-Convolutions-with-Large-Filter-Size"><a href="#Factorizing-Convolutions-with-Large-Filter-Size" class="headerlink" title="Factorizing Convolutions with Large Filter Size"></a>Factorizing Convolutions with Large Filter Size</h5><p>大尺寸的卷积核可以带来更大的感受野，但也意味着更多的参数，比如5x5卷积核参数是3x3卷积核的25/9=2.78倍。为此，作者提出可以用2个连续的3x3卷积层(stride=1)组成的小网络来代替单个的5x5卷积层，(保持感受野范围的同时又减少了参数量)如下图：<br><img src="/2017/08/01/googlenet/6.jpg" alt="6.jpg" title=""></p>
+<p>然后就会有2个疑问：</p>
+<p><strong>1 . 这种替代会造成表达能力的下降吗？</strong><br>后面有大量实验可以表明不会造成表达缺失；</p>
+<p><strong>2 . 3x3卷积之后还要再加激活吗？</strong><br>作者也做了对比试验，表明<strong>添加非线性激活会提高性能</strong>。</p>
+<p>从上面来看，大卷积核完全可以由一系列的3x3卷积核来替代，那能不能分解的更小一点呢。文章考虑了 <strong>nx1 卷积核</strong>。<br>如下图所示的取代3x3卷积：<br><img src="/2017/08/01/googlenet/7.jpg" alt="7.jpg" title=""><br>一是引入了 Factorization into small convolutions 的思想，将一个较大的二维卷积拆成两个较小的一维卷积，比如将7´7卷积拆成1´7卷积和7´1卷积，或者将3´3卷积拆成1´3卷积和3´1卷积，如上图所示。一方面节约了大量参数，加速运算并减轻了过拟合（比将7´7卷积拆成1´7卷积和7´1卷积，比拆成3个3´3卷积更节约参数），同时增加了一层非线性扩展模型表达能力。论文中指出，这种非对称的卷积结构拆分，其结果比对称地拆为几个相同的小卷积核效果更明显，可以处理更多、更丰富的空间特征，增加特征多样性。于是，任意nxn的卷积都可以通过1xn卷积后接nx1卷积来替代。实际上，作者发现<strong>在网络的前期使用这种分解效果并不好，还有在中度大小的feature map上使用效果才会更好</strong>。（对于mxm大小的feature map,建议m在12到20之间）。</p>
+<p>另一方面，Inception V3 优化了 Inception Module 的结构，现在 Inception Module 有35´35、17´17和8´8三种不同结构。这些 Inception Module 只在网络的后部出现，前部还是普通的卷积层。并且 Inception V3 除了在 Inception Module 中使用分支，还在分支中使用了分支（8´8的结构中），可以说是Network In Network In Network。最终取得 top-5 错误率 <strong>3.5%</strong>.</p>
+<p>总结如下图：<br><img src="/2017/08/01/googlenet/8.jpg" alt="8.jpg" title=""></p>
+<p>(1) 图4是GoogLeNet V1中使用的Inception结构；</p>
+<p>(2) 图5是用3x3卷积序列来代替大卷积核 V2；</p>
+<p>(3) 图6是用nx1卷积来代替大卷积核，这里设定n=7来应对17x17大小的feature map。该结构被正式用在GoogLeNet V3中。</p>
+<h4 id="4、Inception-V4"><a href="#4、Inception-V4" class="headerlink" title="4、Inception V4"></a>4、Inception V4</h4><p>Inception V4 相比 V3 主要是结合了微软的 ResNet，将错误率进一步减少到 <strong>3.08%</strong>.<br><img src="/2017/08/01/googlenet/9.jpg" alt="9.jpg" title=""><br><img src="/2017/08/01/googlenet/10.jpg" alt="10.jpg" title=""><br><img src="/2017/08/01/googlenet/11.jpg" alt="11.jpg" title=""></p>
+<h4 id="GoogLeNet-V1"><a href="#GoogLeNet-V1" class="headerlink" title="GoogLeNet V1"></a>GoogLeNet V1</h4><img src="/2017/08/01/googlenet/12.jpg" alt="12.jpg" title="">
+<p>例如，在 tflearn 的 <a href="https://github.com/ailib/tflearn/blob/master/examples/images/googlenet.py" target="_blank" rel="external">googlenet.py</a> 中，定义 Inception(3a) 中的分支结构，用 merge 函数合并 feature map：</p>
+<pre><code class="python">    network = input_data(shape=[None, 227, 227, 3])  
+    conv1_7_7 = conv_2d(network, 64, 7, strides=2, activation=&#39;relu&#39;, name = &#39;conv1_7_7_s2&#39;)  
+    pool1_3_3 = max_pool_2d(conv1_7_7, 3,strides=2)  
+    pool1_3_3 = local_response_normalization(pool1_3_3)  
+    conv2_3_3_reduce = conv_2d(pool1_3_3, 64,1, activation=&#39;relu&#39;,name = &#39;conv2_3_3_reduce&#39;)  
+    conv2_3_3 = conv_2d(conv2_3_3_reduce, 192,3, activation=&#39;relu&#39;, name=&#39;conv2_3_3&#39;)  
+    conv2_3_3 = local_response_normalization(conv2_3_3)  
+    pool2_3_3 = max_pool_2d(conv2_3_3, kernel_size=3, strides=2, name=&#39;pool2_3_3_s2&#39;)  
+    inception_3a_1_1 = conv_2d(pool2_3_3, 64, 1, activation=&#39;relu&#39;, name=&#39;inception_3a_1_1&#39;)  
+    inception_3a_3_3_reduce = conv_2d(pool2_3_3, 96,1, activation=&#39;relu&#39;, name=&#39;inception_3a_3_3_reduce&#39;)  
+    inception_3a_3_3 = conv_2d(inception_3a_3_3_reduce, 128,filter_size=3,  activation=&#39;relu&#39;, name = &#39;inception_3a_3_3&#39;)  
+    inception_3a_5_5_reduce = conv_2d(pool2_3_3,16, filter_size=1,activation=&#39;relu&#39;, name =&#39;inception_3a_5_5_reduce&#39; )  
+    inception_3a_5_5 = conv_2d(inception_3a_5_5_reduce, 32, filter_size=5, activation=&#39;relu&#39;, name= &#39;inception_3a_5_5&#39;)  
+    inception_3a_pool = max_pool_2d(pool2_3_3, kernel_size=3, strides=1, )  
+    inception_3a_pool_1_1 = conv_2d(inception_3a_pool, 32, filter_size=1, activation=&#39;relu&#39;, name=&#39;inception_3a_pool_1_1&#39;)  
+
+    # merge the inception_3a__  
+    inception_3a_output = merge([inception_3a_1_1, inception_3a_3_3, inception_3a_5_5, inception_3a_pool_1_1], mode=&#39;concat&#39;, axis=3)
+</code></pre>
+<p>最后对于 <strong>Inception(5b)</strong> 的7<em>7</em>1024的输出采用7*7的 avg pooling，40%的 Dropout 和 softmax：</p>
+<pre><code class="python">    pool5_7_7 = avg_pool_2d(inception_5b_output, kernel_size=7, strides=1)  
+    pool5_7_7 = dropout(pool5_7_7, 0.4)  
+    loss = fully_connected(pool5_7_7, 17,activation=&#39;softmax&#39;)
+</code></pre>
+<p>由于解决 <a href="http://www.robots.ox.ac.uk/~vgg/data/flowers/17/" target="_blank" rel="external">Oxford 17 类鲜花 </a> 数据集分类任务，最后的输出通道设为17。</p>
+<h4 id="5、总结"><a href="#5、总结" class="headerlink" title="5、总结"></a>5、总结</h4><p><strong>Inception V1</strong>——构建了1x1、3x3、5x5的 conv 和3x3的 pooling 的<strong>分支网络</strong>，同时使用 <strong>MLPConv</strong> 和<strong>全局平均池化</strong>，扩宽卷积层网络宽度，增加了网络对尺度的适应性；</p>
+<p><strong>Inception V2</strong>——提出了 <strong>Batch Normalization</strong>，代替 <strong>Dropout</strong> 和 <strong>LRN</strong>，其正则化的效果让大型卷积网络的训练速度加快很多倍，同时收敛后的分类准确率也可以得到大幅提高，同时学习 <strong>VGG</strong> 使用两个3´3的卷积核代替5´5的卷积核，在降低参数量同时提高网络学习能力；</p>
+<p><strong>Inception V3</strong>——引入了 <strong>Factorization</strong>，将一个较大的二维卷积拆成两个较小的一维卷积，比如将3´3卷积拆成1´3卷积和3´1卷积，一方面节约了大量参数，加速运算并减轻了过拟合，同时增加了一层非线性扩展模型表达能力，除了在 <strong>Inception Module</strong> 中使用分支，还在分支中使用了分支（<strong>Network In Network In Network</strong>）；</p>
+<p><strong>Inception V4</strong>——研究了 <strong>Inception Module</strong> 结合 <strong>Residual Connection</strong>，结合 <strong>ResNet</strong> 可以极大地加速训练，同时极大提升性能，在构建 Inception-ResNet 网络同时，还设计了一个更深更优化的 Inception v4 模型，能达到相媲美的性能</p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'thank you'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2017/08/01/googlenet/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2017/08/01/googlenet/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//thank you.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="http://www.xiangpeng.me/ " style="border-bottom: none;">xiangpeng</a></li>
+            </ul>
+            
+            	<span id="busuanzi_container_site_pv">2017总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+			
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
