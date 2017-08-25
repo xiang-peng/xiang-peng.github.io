@@ -162,7 +162,7 @@
 <p>下图是一个比较清晰的结构图：<br><img src="/2017/08/01/googlenet/4.jpg" alt="4.jpg" title=""></p>
 <h5 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h5><p>GoogLeNet是谷歌团队为了参加ILSVRC 2014比赛而精心准备的，为了达到最佳的性能，除了使用上述的网络结构外，还做了大量的辅助工作：包括训练多个model求平均、裁剪不同尺度的图像做多次验证等等。详细的这些可以参看文章的实验部分。</p>
 <p>本文的主要想法其实是想通过构建密集的块结构来近似最优的稀疏结构，从而达到提高性能而又不大量增加计算量的目的。GoogleNet的caffemodel大小约50M，但性能却很优异。</p>
-<h4 id="2、Inception-V2"><a href="#2、Inception-V2" class="headerlink" title="2、Inception V2"></a>2、Inception V2</h4><p>Inception V2 学习了 VGG 用两个3´3的卷积代替5´5的大卷积，在降低参数的同时建立了更多的非线性变换，使得 CNN 对特征的学习能力更强：<br><img src="/2017/08/01/googlenet/5.jpg" alt="[两个3´3的卷积层功能类似于一个5´5的卷积层]" title="[两个3´3的卷积层功能类似于一个5´5的卷积层]"></p>
+<h4 id="2、Inception-V2"><a href="#2、Inception-V2" class="headerlink" title="2、Inception V2"></a>2、Inception V2</h4><p>Inception V2 学习了 VGG 用两个3´3的卷积代替5´5的大卷积，在降低参数的同时建立了更多的非线性变换，使得 CNN 对特征的学习能力更强：<br><img src="/2017/08/01/googlenet/5.jpg" alt="slug [两个3´3的卷积层功能类似于一个5´5的卷积层]" title="slug [两个3´3的卷积层功能类似于一个5´5的卷积层]"></p>
 <p>另外提出了著名的 <strong>Batch Normalization</strong>（以下简称BN）方法(<a href="http://blog.csdn.net/app_12062011/article/details/57083447" target="_blank" rel="external">这里</a>有介绍,另外<a href="http://www.jianshu.com/p/4270f5acc066.softmax" target="_blank" rel="external">BN的反向传导</a>,以及<a href="http://blog.csdn.net/u014313009/article/details/51045303" target="_blank" rel="external">梯度计算</a>)。BN 是一个非常有效的正则化方法，可以让大型卷积网络的训练速度加快很多倍，同时收敛后的分类准确率也可以得到大幅提高。BN 在用于神经网络某层时，会对每一个 mini-batch 数据的内部进行标准化（<strong>normalization</strong>）处理，使输出规范化到 N(0,1) 的正态分布，减少了 <strong>Internal Covariate Shift</strong>（内部神经元分布的改变）。</p>
 <blockquote>
 <p>补充：在 TensorFlow 1.0.0 中采用 tf.image.per_image_standardization() 对图像进行标准化，旧版为 tf.image.per_image_whitening。</p>
